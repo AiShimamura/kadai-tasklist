@@ -12,6 +12,7 @@
                 <tr>
                     <th>id</th>
                     <th>タスク</th>
+                    <th>ステータス</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,6 +20,7 @@
                 <tr>
                     <td><a class="link link-hover text-info" href="{{ route('tasks.show', $tasks->id) }}">{{ $tasks->id }}</a></td>
                     <td>{{ $tasks->content }}</td>
+                    <td>{{ $tasks->status }}</td>
                 </tr>
                 @endforeach
             </tbody>

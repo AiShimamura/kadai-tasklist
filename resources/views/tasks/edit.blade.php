@@ -20,7 +20,7 @@
                 
                 <div class="form-group">
                     <label for="status">ステータス:</label>
-                    <input type="text" name="status" id="status" class="form-control" required>
+                    <input type="text" name="status" value="{{ $tasks->status }}" class="input input-bordered w-full">
                 </div>
 
             <button type="submit" class="btn btn-primary btn-outline">更新</button>
