@@ -17,6 +17,10 @@
                     <input type="text" name="content" class="input input-bordered w-full">
                 </div>
 
+                <div class="form-group">
+                    <label for="status">ステータス:</label>
+                    <input type="text" name="status" id="status" class="form-control" required>
+                </div>
             <button type="submit" class="btn btn-primary btn-outline">投稿</button>
         </form>
     </div>
