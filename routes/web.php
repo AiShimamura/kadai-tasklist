@@ -18,5 +18,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/', [TasksController::class, 'index'])->middleware(['auth'])->name('index');
+Route::get('/dashboard', [TasksController::class, 'index'])->middleware(['auth'])->name('index');
 
 require __DIR__.'/auth.php';
