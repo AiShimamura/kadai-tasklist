@@ -13,12 +13,23 @@ class TasksController extends Controller
      */
     public function index()
     {
-        // ログインしているユーザーのタスク一覧を表示
-        $tasks = Task::where('user_id', auth()->id())->get();
-        return view('tasks.index', compact('tasks'));
+        if (\Auth::check()) { // 認証済みの場合
+            // 認証済みユーザを取得
+            $user = \Auth::user();
+            // ユーザのタスク一覧を取得
+            $tasks = Task::where('user_id', $user->id)->get();
+            
+        // indexビューでそれらを表示
+        return view('tasks.index',[
+                'tasks' => $tasks,
+        ]);
+    }else{
+        // ユーザーがログインしていない場合
+        return redirect()->route('login');
+        }
     }
 
-    /**
+     /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -41,11 +52,13 @@ class TasksController extends Controller
         'status' => 'required|max:10',
         ]);
     
-                // タスクを作成
+        // 認証済みユーザのタスクとして作成
         $tasks = new Task;
-        $tasks->content = $request->content;
-        $tasks->status = $request->status;
-        $tasks->save();
+        $tasks->content = $request->input('content');
+        $tasks->status = $request->input('status');
+        
+        // ユーザーに関連付けて保存
+        $request->user()->tasks()->save($tasks);
 
         // トップページへリダイレクトさせる
         return redirect('/');
@@ -56,12 +69,20 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        // 他人のタスクにアクセスを制限
-        if ($task->user_id !== auth()->id()) {
-            return redirect()->route('tasks.index');
-            }
-        return view('tasks.show', compact('task'));
+        if (\Auth::check()) { // 認証済みの場合
+            // 認証済みユーザを取得
+            $user = \Auth::user();
+            // idの値でタスクを検索して取得
+            $tasks = Task::where('user_id', $user->id)->findOrFail($id);
 
+        // タスク詳細ビューでそれを表示
+        return view('tasks.show', [
+            'tasks' => $tasks,
+                    ]);
+    }else{
+        // ユーザーがログインしていない場合
+        return redirect()->route('login');
+        }
     }
 
     /**
@@ -69,11 +90,19 @@ class TasksController extends Controller
      */
     public function edit(string $id)
     {
-        // 他人のタスクにアクセスを制限
-        if ($task->user_id !== auth()->id()) {
-            return redirect()->route('tasks.index');
+        if (\Auth::check()) { // 認証済みの場合
+            // 認証済みユーザを取得
+            $user = \Auth::user();
+            // idの値でタスクを検索して取得
+            $tasks = Task::where('user_id', $user->id)->findOrFail($id);
+            
+        // タスク編集ビューでそれを表示
+        return view('tasks.edit', compact('tasks'));
+
+    }else{
+        // ユーザーがログインしていない場合
+        return redirect()->route('login');
         }
-        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -81,8 +110,11 @@ class TasksController extends Controller
      */
     public function update(Request $request, string $id)
     {
+            // タスクを取得
+        $tasks = Task::findOrFail($id);
+        
         // 他人のタスクにアクセスを制限
-        if ($task->user_id !== auth()->id()) {
+        if ($tasks->user_id !== auth()->id()) {
         return redirect()->route('tasks.index');
         }
         
@@ -100,8 +132,11 @@ class TasksController extends Controller
      */
     public function destroy(string $id)
     {
+        // タスクを取得
+        $tasks = Task::findOrFail($id);
+        
         // 他人のタスクにアクセスを制限
-        if ($task->user_id !== auth()->id()) {
+        if ($tasks->user_id !== auth()->id()) {
         return redirect()->route('tasks.index');
         }
         

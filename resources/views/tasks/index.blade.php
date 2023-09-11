@@ -30,5 +30,4 @@
     {{-- タスクページへのリンク --}}                                               
     <a class="btn btn-primary" href="{{ route('tasks.create') }}">タスクの投稿</a>
 
-
 @endsection
