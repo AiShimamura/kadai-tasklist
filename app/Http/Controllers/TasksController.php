@@ -95,9 +95,11 @@ class TasksController extends Controller
             $user = \Auth::user();
             // idの値でタスクを検索して取得
             $tasks = Task::where('user_id', $user->id)->findOrFail($id);
-            
-        // タスク編集ビューでそれを表示
-        return view('tasks.edit', compact('tasks'));
+
+            // タスク編集ビューでそれを表示
+            return view('tasks.edit', [
+                'tasks' => $tasks,
+                        ]);
 
     }else{
         // ユーザーがログインしていない場合

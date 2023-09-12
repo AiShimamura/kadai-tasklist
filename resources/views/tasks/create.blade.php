@@ -14,7 +14,7 @@
                     <label for="content" class="label">
                         <span class="label-text">タスク:</span>
                     </label>
-                    <input type="text" name="content" class="input input-bordered w-full">
+                    <input type="text" name="content" class="input input-bordered w-full" required>
                 </div>
 
                 <div class="form-group">
